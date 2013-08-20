@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1A1B19"
+    >
+   <ListView 
+       android:id="@+id/menu_list"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent" 
+	    style="@style/common_listview"
+	    android:divider="@drawable/menu_listview_divider"
+    >
+</ListView> 
+</RelativeLayout>
+
