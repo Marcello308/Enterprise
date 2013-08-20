@@ -7,6 +7,8 @@ import java.util.Map;
 
 import android.os.Handler;
 
+import com.lidroid.xutils.http.client.RequestParams;
+
 /**
  * Created with IntelliJ IDEA.
  * User: michael
@@ -26,7 +28,7 @@ public class LTHttpRequestMessage {
 
     private List<LTHttpParam> urlParamList;
 
-    private List<LTHttpParam> postParamList;
+    private  RequestParams postParamList;
 
     private Map<String, Object> otherParmas;
 
@@ -42,8 +44,6 @@ public class LTHttpRequestMessage {
     public LTHttpRequestMessage() {
 
     }
-    
-    
 
     public Handler getHandler() {
         return handler;
@@ -54,7 +54,7 @@ public class LTHttpRequestMessage {
     }
 
     public LTHttpRequestMessage(LTHttpType.RequestType httpType, List<LTHttpParam> urlParams,
-                         List<LTHttpParam> postParams, Handler handler, int handlerMessageID,
+    		RequestParams postParams, Handler handler, int handlerMessageID,
                          IWebService webService) {
         this.httpType = httpType;
         setUrlParamList(urlParams);
@@ -63,14 +63,10 @@ public class LTHttpRequestMessage {
         setHandlerMessageID(handlerMessageID);
         setWebService(webService);
     }
-    
-    
 
     public IWebService getWebService() {
 		return webService;
 	}
-
-
 
 	public void setWebService(IWebService webService) {
 		this.webService = webService;
@@ -91,20 +87,20 @@ public class LTHttpRequestMessage {
             }
     }
 
-    public List<LTHttpParam> getPostParamList() {
+    public RequestParams getPostParamList() {
         return postParamList;
     }
 
-    public void setPostParamList(List<LTHttpParam> postParamList) {
+    public void setPostParamList(RequestParams postParamList) {
         this.postParamList = postParamList;
         this.postParams = new HashMap<String, String>();
-        if (postParamList != null){
+/*        if (postParamList != null){
             for (LTHttpParam param : postParamList) {
                 this.postParams.put(param.getParamName(), (String) param.getParamValue());
             }
         }else{
-        	this.postParamList = new ArrayList<LTHttpParam>();  
-        }
+        	this.postParamList = new RequestParams();  
+        }*/
     }
 
     public LTHttpType.RequestType getHttpType() {
