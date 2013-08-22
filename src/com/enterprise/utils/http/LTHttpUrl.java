@@ -1,5 +1,9 @@
 package com.enterprise.utils.http;
 
+import java.util.List;
+
+import com.enterprise.constants.APIConstants;
+
 
 
 
@@ -12,14 +16,18 @@ package com.enterprise.utils.http;
  */
 public class LTHttpUrl {
 
-/*    public static String getUrl(LTHttpType.RequestType requestType, List<LTHttpParam> urlParams) {
+    public static String getUrl(LTHttpType.RequestType requestType, List<LTHttpParam> urlParams) {
         String url = "";
         switch (requestType) {
-          
-            case GET_FORUM_USER_RANK:	
+/*            case GET_FORUM_USER_RANK:	
             	url = String.format("%s%s", LTConstants.API_DEFAULT_HOST, LTConstants.API_GET_FORUM_USER_RANK);
-            	break;
-            	
+            	break;*/
+        case HOME_ARTICLE:
+        		url = APIConstants.API_DEFAULT_HOST;
+        	break;
+        case MENU:
+    		url = APIConstants.API_DEFAULT_HOST;
+    	break;
             	
             default:
         }
@@ -34,5 +42,5 @@ public class LTHttpUrl {
             }
             return url.trim();
         }
-    }*/
+    }
 }

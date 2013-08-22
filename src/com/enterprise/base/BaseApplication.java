@@ -9,5 +9,9 @@ public class BaseApplication extends Application{
     public static BaseApplication getInstance() {
         return instance;
     }
-    
+	@Override
+	public void onCreate() {
+		super.onCreate();		
+		instance = this;
+	}
 }

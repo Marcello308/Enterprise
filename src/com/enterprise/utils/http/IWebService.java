@@ -6,9 +6,12 @@
  */
 package com.enterprise.utils.http;
 
+import java.io.IOException;
+
 import com.enterprise.utils.exception.LTDBException;
 import com.enterprise.utils.exception.LTHttpException;
 import com.enterprise.utils.exception.LTParserException;
+import com.lidroid.xutils.exception.HttpException;
 
 /**
  * @author michael
@@ -19,6 +22,6 @@ public interface IWebService {
 	
 	
 	
-	Object httpPost(LTHttpRequestMessage httpMessage) throws LTHttpException, LTParserException, LTDBException;
+	Object httpPost(LTHttpRequestMessage httpMessage) throws  HttpException, IOException;
 
 }

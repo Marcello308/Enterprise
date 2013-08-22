@@ -13,6 +13,8 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,7 +24,12 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.enterprise.R;
+import com.enterprise.base.BaseFragment;
 import com.enterprise.model.Menu;
+import com.enterprise.services.EnterpriseServices;
+import com.enterprise.utils.http.LTHttpError;
+import com.enterprise.utils.http.LTHttpRequestMessage;
+import com.enterprise.utils.http.LTHttpType.RequestType;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -32,12 +39,12 @@ import com.lidroid.xutils.http.client.ResponseStream;
 import com.slidingmenu.lib.SlidingMenu;
 
 @SuppressLint("ValidFragment")
-public class HomeFragment extends Fragment{
+public class HomeFragment extends BaseFragment{
 
 	private Context _context;
 	private  SlidingMenu _menu ;
 	public HomeFragment(Context _context, SlidingMenu menu) {
-		super();
+		super(_context);
 		this._context = _context;
 		this._menu = menu;
 	}
@@ -66,38 +73,37 @@ public class HomeFragment extends Fragment{
 			_listView = (ListView) view.findViewById(R.id.home_listview);
 			_listAdapter = new HomeListAdapter(_context);
 			_listView.setAdapter(_listAdapter);
-			setListData();
 			
-			
+	        final List<Menu> menuList = new ArrayList<Menu>();
+	        LTHttpRequestMessage message = new LTHttpRequestMessage(RequestType.HOME_ARTICLE, 	null, null, _handler, HTTP_RESPONSE_HOME_ARTICLE, EnterpriseServices.getInstance());
+	        loadDataWithMessage("正在加载首页动态.....", message);
+	        
 		return view;
 	}
-	private void setListData() {
-		
-		final List<Menu> menuList = new ArrayList<Menu>();
-		
-		HttpUtils http = new HttpUtils();
-        http.send(HttpRequest.HttpMethod.GET,
-            "http://www.tmppq.com",
-            new RequestCallBack<String>(){
-                @Override
-                public void onLoading(long total, long current) {
-                } 
-
-                @Override
-                public void onSuccess(String result) {
-                	Document doc = Jsoup.parse(result);
-                	Elements es = doc.select("a.newslist_time");
-    				for(Element e1 : es){
-    					Menu menu = new Menu();
-    					menu.name = e1.text();
-    					menu.href = e1.attr("href");
-    					menuList.add(menu);
-    				}
-    				_listAdapter.setData(menuList);
-                }
-                @Override
-                public void onStart() {
-                }
-        });
-	}
+	
+	private static final int HTTP_RESPONSE_HOME_ARTICLE=0;
+	private Handler _handler  = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			dismissProgressDialog();
+			if (msg == null || msg.obj == null) {
+				showMessage(R.string.loading_data_failed);
+				return;
+			}
+			if (msg.obj instanceof LTHttpError) {
+				LTHttpError error = (LTHttpError) msg.obj;
+				showMessage(error.errorMessage);
+				return;
+			}
+			switch (msg.what) {
+			case HTTP_RESPONSE_HOME_ARTICLE:
+				List<Menu> menuList = (List<Menu>) msg.obj;
+				_listAdapter.setData(menuList);
+				break;
+			default:
+				break;
+			}
+		}
+	};
 }

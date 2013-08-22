@@ -129,16 +129,6 @@ public class BaseLayout extends RelativeLayout{
 	            LTHttpError error = new LTHttpError();
 				try {
 					obj = _hm.getWebService().httpPost(params[0]);
-				} catch (LTHttpException e) {
-					e.printStackTrace();
-					error.errorMessage = e.getMessage();
-				} catch (LTParserException e) {
-					e.printStackTrace();
-					error.errorMessage = e.getMessage();
-					obj = error;
-				} catch (LTDBException e) {
-					error.errorMessage = e.getMessage();
-					
 				} catch (Exception e) {
 					error.errorMessage = (e==null || LTToolUtil.isNull(e.getMessage()))?
 							LTToolUtil.getResourceString(R.string.unknown_error):e.getMessage();

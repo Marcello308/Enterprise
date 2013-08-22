@@ -1,33 +1,32 @@
 package com.enterprise;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import com.enterprise.base.BaseActivity;
 import com.enterprise.home.HomeFragment;
 import com.enterprise.menu.MenuView;
 import com.enterprise.model.Menu;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.http.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
+import com.enterprise.services.EnterpriseServices;
+import com.enterprise.utils.http.LTHttpError;
+import com.enterprise.utils.http.LTHttpRequestMessage;
+import com.enterprise.utils.http.LTHttpType.RequestType;
 import com.slidingmenu.lib.SlidingMenu;
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends BaseActivity {
 
 	private RelativeLayout _root;
-	private  SlidingMenu menu ;
+	private SlidingMenu menu ;
+	private  MenuView menuView;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,13 +56,16 @@ public class HomeActivity extends Activity {
 	        menu.setBehindWidth(350);
 	        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 	        
-	        final MenuView menuView = new MenuView(this);
+	        menuView = new MenuView(this);
 	        menu.setMenu(menuView);
 	        
-	        final List<Menu> menuList = new ArrayList<Menu>();
 	        
-	        HttpUtils http = new HttpUtils();
-	        http.send(HttpRequest.HttpMethod.GET,
+	        
+	       final List<Menu> menuList = new ArrayList<Menu>();
+	        LTHttpRequestMessage message = new LTHttpRequestMessage(RequestType.MENU, 	null, null, _handler, HTTP_RESPONSE_MENU, EnterpriseServices.getInstance());
+	        loadDataWithMessage("正在加载首页栏目.....", message);
+	     
+	       /* http.send(HttpRequest.HttpMethod.GET,
 	            "http://www.tmppq.com",
 	            new RequestCallBack<String>(){
 	                @Override
@@ -88,7 +90,32 @@ public class HomeActivity extends Activity {
 	                @Override
 	                public void onStart() {
 	                }
-	        });
+	        });*/
 	        
 	}
+	private static final int HTTP_RESPONSE_MENU =0;
+	private Handler _handler  = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			dismissProgressDialog();
+			if (msg == null || msg.obj == null) {
+				showMessage(R.string.loading_data_failed);
+				return;
+			}
+			if (msg.obj instanceof LTHttpError) {
+				LTHttpError error = (LTHttpError) msg.obj;
+				showMessage(error.errorMessage);
+				return;
+			}
+			switch (msg.what) {
+			case HTTP_RESPONSE_MENU:
+				List<Menu> menuList = (List<Menu>) msg.obj;
+				menuView.setData(menuList);
+				break;
+			default:
+				break;
+			}
+		}
+	};
 }
