@@ -32,7 +32,7 @@ public class MenuItemView extends RelativeLayout{
 		this._context = context;
 		init();
 	}
-	@ViewInject(id = R.id.menu_item_tvTitle)TextView _tvTitle;
+	@ViewInject(R.id.menu_item_tvTitle)TextView _tvTitle;
 	private void init(){
 		View view = LayoutInflater.from(_context).inflate(R.layout.menu_item, null);
 		addView(view);
