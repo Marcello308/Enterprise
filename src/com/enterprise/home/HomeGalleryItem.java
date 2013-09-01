@@ -33,8 +33,8 @@ public class HomeGalleryItem extends RelativeLayout{
 		init();
 	}
 
-	@ViewInject(id = R.id.home_gallery_iv)ImageView _ivCarousel;
-	@ViewInject(id = R.id.home_gallery_pointImage)ImageView _ivPoint;
+	@ViewInject(R.id.home_gallery_iv)ImageView _ivCarousel;
+	@ViewInject(R.id.home_gallery_pointImage)ImageView _ivPoint;
 	private void init() {
 			View view = LayoutInflater.from(_context).inflate(R.layout.home_gallery_item, null);
 			addView(view);

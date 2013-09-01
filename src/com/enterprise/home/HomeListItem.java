@@ -35,7 +35,7 @@ public class HomeListItem extends RelativeLayout{
 		init();
 	}
 
-	@ViewInject(id = R.id.home_list_text)TextView _tvName;
+	@ViewInject(R.id.home_list_text)TextView _tvName;
 	private void init() {
 			View view = LayoutInflater.from(_context).inflate(R.layout.home_list_item, null);
 			addView(view);
