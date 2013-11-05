@@ -1,6 +1,8 @@
 package com.enterprise.model;
 
-public class Menu {
+import java.io.Serializable;
+
+public class Menu implements Serializable{
 		public String name;
 		public String href;
 }

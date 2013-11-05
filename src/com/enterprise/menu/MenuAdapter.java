@@ -3,12 +3,14 @@ package com.enterprise.menu;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.enterprise.model.Menu;
-
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
+import com.enterprise.R;
+import com.enterprise.model.Menu;
 
 public class MenuAdapter extends BaseAdapter{
 
@@ -53,7 +55,11 @@ public class MenuAdapter extends BaseAdapter{
 		}
 		Menu menu = _list.get(arg0);
 		item.setData(menu);
+		
+		if(arg0==0){
+			item.setBackgroundResource(R.drawable.menu_item_bg);
+		}
+		
 		return item;
 	}
-		
 }

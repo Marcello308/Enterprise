@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -48,8 +49,12 @@ public class HomeFragment extends BaseFragment{
 		this._context = _context;
 		this._menu = menu;
 	}
-	private Gallery _gallery;
-	private HomeGalleryAdapter _galleryAdapter;
+	public HomeFragment(Context _context) {
+		super(_context);
+	}
+	public HomeFragment() {
+		super();
+	}
 	private HomeListAdapter _listAdapter;
 	private ListView _listView;
 	private ImageButton _btnTop;
@@ -57,15 +62,11 @@ public class HomeFragment extends BaseFragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 			View view = inflater.inflate(R.layout.home_fragment, null);
-			_gallery = (Gallery) view.findViewById(R.id.home_gallery);
-			_galleryAdapter = new HomeGalleryAdapter(_context);
-			_gallery.setAdapter(_galleryAdapter);
-			
+
 			_btnTop = (ImageButton) view.findViewById(R.id.home_top_btn);
 			_btnTop.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					_menu.toggle();
 				}
 			});
@@ -73,12 +74,18 @@ public class HomeFragment extends BaseFragment{
 			_listView = (ListView) view.findViewById(R.id.home_listview);
 			_listAdapter = new HomeListAdapter(_context);
 			_listView.setAdapter(_listAdapter);
+			_listView.setOnItemClickListener(_event);
+			
 			
 	        final List<Menu> menuList = new ArrayList<Menu>();
 	        LTHttpRequestMessage message = new LTHttpRequestMessage(RequestType.HOME_ARTICLE, 	null, null, _handler, HTTP_RESPONSE_HOME_ARTICLE, EnterpriseServices.getInstance());
 	        loadDataWithMessage("正在加载首页动态.....", message);
 	        
 		return view;
+	}
+	private OnItemClickListener _event;
+	public void setListViewOnItemClick(OnItemClickListener event){
+		_event = event;
 	}
 	
 	private static final int HTTP_RESPONSE_HOME_ARTICLE=0;

@@ -1,21 +1,26 @@
 package com.enterprise;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
 
 import com.enterprise.base.BaseActivity;
 import com.enterprise.home.HomeFragment;
 import com.enterprise.menu.MenuView;
 import com.enterprise.model.Menu;
+import com.enterprise.module.ArticleDetailActivity;
 import com.enterprise.services.EnterpriseServices;
 import com.enterprise.utils.http.LTHttpError;
 import com.enterprise.utils.http.LTHttpRequestMessage;
@@ -32,16 +37,42 @@ public class HomeActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		 requestWindowFeature(Window.FEATURE_NO_TITLE);           //设置标题栏样式
 		setContentView(R.layout.home_main);
-		
+
 		initMenu();
-	
+		
 		HomeFragment fragment = new HomeFragment(this,menu);
+		fillContent(fragment);
+		
+		fragment.setListViewOnItemClick(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				Menu menu = (Menu) arg0.getAdapter().getItem(arg2);
+				Intent intent =new Intent(HomeActivity.this,ArticleDetailActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putSerializable("data", menu);
+				intent.putExtra("data", bundle);
+				startActivity(intent);
+				
+				int version =  Integer.valueOf(android.os.Build.VERSION.SDK);
+				if(version > 5 ){
+					overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+				}
+			}
+		});
+	}
+
+	private void fillContent(Fragment fragment){
 		FragmentManager fragmentManager = getFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		transaction.replace(R.id.home_layout, fragment);
+		/*	transaction.setCustomAnimations(android.R.animator.fade_in,  
+                    android.R.animator.fade_out);  
+			transaction.show(fragment);
+			transaction.addToBackStack(null);
+		*/
 		transaction.commit();
 	}
-
 	/**
 	 *  初始化菜单
 	 */
@@ -59,39 +90,9 @@ public class HomeActivity extends BaseActivity {
 	        menuView = new MenuView(this);
 	        menu.setMenu(menuView);
 	        
-	        
-	        
 	       final List<Menu> menuList = new ArrayList<Menu>();
 	        LTHttpRequestMessage message = new LTHttpRequestMessage(RequestType.MENU, 	null, null, _handler, HTTP_RESPONSE_MENU, EnterpriseServices.getInstance());
 	        loadDataWithMessage("正在加载首页栏目.....", message);
-	     
-	       /* http.send(HttpRequest.HttpMethod.GET,
-	            "http://www.tmppq.com",
-	            new RequestCallBack<String>(){
-	                @Override
-	                public void onLoading(long total, long current) {
-	                } 
-
-	                @Override
-	                public void onSuccess(String result) {
-	                	Document doc = Jsoup.parse(result);
-	                	Element content = doc.select(".mainmenuiner").first();
-	                	Elements ea = content.getElementsByTag("a");
-	    				for(Element e1 : ea){
-	    					Menu menu = new Menu();
-	    					menu.name = e1.text();
-	    					menu.href = e1.attr("href");
-	    					menuList.add(menu);
-	    				}
-	    				
-	    				menuView.setData(menuList);
-	                }
-
-	                @Override
-	                public void onStart() {
-	                }
-	        });*/
-	        
 	}
 	private static final int HTTP_RESPONSE_MENU =0;
 	private Handler _handler  = new Handler(){

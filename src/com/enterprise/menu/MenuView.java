@@ -2,10 +2,8 @@ package com.enterprise.menu;
 
 import java.util.List;
 
-import android.R.color;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,19 +44,29 @@ public class MenuView extends RelativeLayout{
 		_list = (ListView) view.findViewById(R.id.menu_list);
 		_adapter = new MenuAdapter(_context);
 		_list.setAdapter(_adapter);
+		
+		
+		
+		
 		_list.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				
-				
+				if(position!=0){
+					View view0 = (View) parent.getChildAt(0); 
+					view0.setBackgroundColor(Color.TRANSPARENT);
+				}
 				//选中高亮
 				  if (((ListView)parent).getTag() != null){
-                      ((View)((ListView)parent).getTag()).setBackgroundColor(Color.TRANSPARENT);
+					  ((View)((ListView)parent).getTag()).setBackgroundColor(Color.TRANSPARENT);
               }
               ((ListView)parent).setTag(view);
-              view.setBackgroundColor(Color.GRAY);
+              view.setBackgroundResource(R.drawable.menu_item_bg);
+              
+              
+              
+              
+//              view.setBackgroundColor(Color.GRAY);
+//              view.setBackgroundColor(Color.parseColor("#422C2B"))view;
 			}
 		});
 	}

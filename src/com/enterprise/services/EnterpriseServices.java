@@ -11,6 +11,8 @@ import org.jsoup.select.Elements;
 
 import com.enterprise.R;
 import com.enterprise.base.HttpBaseService;
+import com.enterprise.constants.APIConstants;
+import com.enterprise.model.ArticleDetail;
 import com.enterprise.model.Menu;
 import com.enterprise.utils.LTToolUtil;
 import com.enterprise.utils.exception.LTDBException;
@@ -24,7 +26,6 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 
 public class EnterpriseServices extends HttpBaseService implements IWebService{
-	
 	
 	 public String home_cache = null;
 	
@@ -45,12 +46,48 @@ public class EnterpriseServices extends HttpBaseService implements IWebService{
 				String url = LTHttpUrl.getUrl(httpMessage.getHttpType(),
 						httpMessage.getUrlParamList());
 				return getHomeArticle(url);}
+			case ARTICLE_DETAIL:{
+				String url = APIConstants.API_DEFAULT_HOST+httpMessage.getOtherParmas(APIConstants.PARAM_ARTICLE_DETAIL_URL);
+				return getArticleDetail(url);
+			}
+			case WATERFALL:{
+				
+			}
 			default:
 				break;
 			}
 			return null;
 		}
 		
+		/**
+		 *   获取文章详细
+		 * @param url
+		 * @return
+		 * @throws IOException 
+		 * @throws HttpException 
+		 */
+		private ArticleDetail getArticleDetail(String url) throws HttpException, IOException {
+			String ret = post(url, null);
+			if (!LTToolUtil.isNull(ret)) {
+			
+			Document doc = Jsoup.parse(ret);
+			String title = doc.select("div.newstitle").first().text();
+			String info = doc.select("div.info").first().text();
+			String con = doc.select("div.con").first().text();
+			ArticleDetail article= new  ArticleDetail(title, info, con);
+		    return article;
+			}else{
+					throw new HttpException(LTToolUtil
+							.getResourceString(R.string.http_response_null));
+			}
+		}
+		/**
+		 *获取首页文章列表
+		 * @param url
+		 * @return
+		 * @throws HttpException
+		 * @throws IOException
+		 */
 		private List<Menu> getHomeArticle(String url) throws HttpException, IOException {
 			String ret = "";
 			if(home_cache==null){

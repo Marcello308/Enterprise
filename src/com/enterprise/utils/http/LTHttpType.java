@@ -14,7 +14,9 @@ public class LTHttpType {
 	
 	public enum RequestType {
 		MENU,
-		HOME_ARTICLE
+		HOME_ARTICLE,
+		ARTICLE_DETAIL,
+		WATERFALL
     }
 
     public enum ResponseType {

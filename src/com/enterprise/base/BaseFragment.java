@@ -17,7 +17,7 @@ import com.enterprise.utils.http.LTHttpRequestMessage;
 @SuppressLint("ValidFragment")
 public class BaseFragment extends Fragment{
 	
-	private Context _context;
+	private  static Context _context;
 
 /////////////////////////////////////////////////////////////////////
 	// 显示加载数据的对话框
@@ -27,6 +27,11 @@ public class BaseFragment extends Fragment{
 		super();
 		this._context = _context;
 	}
+
+	public BaseFragment() {
+		super();
+	}
+
 	protected ProgressDialog progressDialog = null;
 
 	/**
